@@ -44,17 +44,17 @@ npm install -g truffle
 - Select truffle-config.js in Project Directory
 - Save Workspace
 
-  7.Compile and migrate Contracts
+7. Compile and migrate Contracts
 
-  - In directory cmd:
+- In directory cmd:
 
-  ```
-  truffle mirgrate
-  ```
+```
+truffle mirgrate
+```
 
-  ```
-  truffle deploy
-  ```
+```
+truffle deploy
+```
 
 8. Run Server
 
