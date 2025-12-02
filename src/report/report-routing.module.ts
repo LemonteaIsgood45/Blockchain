@@ -4,6 +4,7 @@ import { ConsultationComponent } from './consultation/consultation.component';
 import { DashboardHomeComponent } from './dashboard-home/dashboard-home.component';
 import { DoctorDashboardComponent } from './doctor-dashboard/doctor-dashboard.component';
 import { ViewRecordComponent } from './view-record/view-record.component';
+import { SearchStationComponent } from './search-station/search-station.component';
 
 const routes: Routes = [
   {
@@ -13,7 +14,8 @@ const routes: Routes = [
       { path: '', redirectTo: 'report-dashboard', pathMatch: 'full' },
       { path: 'report-dashboard', component: DashboardHomeComponent },
       { path: 'consult', component: ConsultationComponent },
-      { path: 'view-record', component: ViewRecordComponent },
+      { path: 'view-report', component: ViewRecordComponent },
+      { path: 'search-station', component: SearchStationComponent }
     ],
   },
 ];

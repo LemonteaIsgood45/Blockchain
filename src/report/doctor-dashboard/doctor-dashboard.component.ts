@@ -14,11 +14,11 @@ export class DoctorDashboardComponent implements OnInit {
 
   checkProgress: boolean = true;
   progressWarn: boolean = false;
-  progressMsg: string = 'Checking Doctor....';
+  progressMsg: string = 'Checking Station....';
 
   constructor(private router: Router, private doctorService: DoctorService) {
     //TODO
-    router.navigate(['/report/view-record']);
+    router.navigate(['/report/report-dashboard']);
   }
 
   ngOnInit(): void {
@@ -28,7 +28,7 @@ export class DoctorDashboardComponent implements OnInit {
   onCheckDoctor() {
     this.checkProgress = true;
     this.progressWarn = false;
-    this.progressMsg = 'Checking Doctor....';
+    this.progressMsg = 'Checking Station....';
 
     var count = 0;
 

@@ -11,8 +11,8 @@ const routes: Routes = [
     component: AdminDashboardComponent,
     children: [
       { path: 'admin-dashboard', component: DashboardHomeComponent },
-      { path: 'doctor', component: DoctorComponent },
-      { path: 'patient', component: PatientComponent },
+      { path: 'station', component: DoctorComponent },
+      { path: 'station-reports', component: PatientComponent },
     ],
   },
 ];

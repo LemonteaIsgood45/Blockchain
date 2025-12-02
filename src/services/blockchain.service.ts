@@ -71,6 +71,31 @@ export class BlockchainService {
     })
   }
 
+  getDoctorsNumber(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.getContract().then(c => {
+        c.methods.getTotalDoctors()
+          .call()
+          .then((n: any) => resolve(Number(n)))
+          .catch((err: any) => reject(err));
+      });
+    });
+  }
+
+  // ------------------------------------
+  //        TOTAL REPORT COUNT
+  // ------------------------------------
+  getTotalReportNumber(): Promise<number> {
+    return new Promise((resolve, reject) => {
+      this.getContract().then(c => {
+        c.methods.getTotalReports()
+          .call()
+          .then((n: any) => resolve(Number(n)))
+          .catch((err: any) => reject(err));
+      });
+    });
+  }
+
   //gets
 
   async getWeb3Provider(): Promise<Web3> {

@@ -12,6 +12,8 @@ import { FormsModule } from '@angular/forms';
 import { PatientRecordComponent } from './consultation/patient-record/patient-record.component';
 import { ViewRecordComponent } from './view-record/view-record.component';
 import { RecordComponent } from './view-record/record/record.component';
+import { SearchStationComponent } from './search-station/search-station.component';
+
 
 @NgModule({
   declarations: [
@@ -23,8 +25,9 @@ import { RecordComponent } from './view-record/record/record.component';
     PatientRecordComponent,
     ViewRecordComponent,
     RecordComponent,
+    SearchStationComponent,
     
   ],
-  imports: [CommonModule,FormsModule, ReportRoutingModule, UtilsModule],
+  imports: [CommonModule, FormsModule, ReportRoutingModule, UtilsModule],
 })
 export class ReportModule {}

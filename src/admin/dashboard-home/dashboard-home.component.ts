@@ -19,6 +19,9 @@ export class DashboardHomeComponent implements OnInit {
     effect(() => {
 
       this.accountBalance = blockchainService.balance()
+      Promise.all([blockchainService.getDoctorsNumber(), blockchainService.getTotalReportNumber()]).then(([doctorsNumber, reportsNumber]) => {
+        this.Count = [doctorsNumber, reportsNumber];
+      });
       console.log(this.accountBalance);
 
     })

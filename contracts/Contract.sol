@@ -56,12 +56,52 @@ contract Contract {
         return Doctors[dr_id].reports;
     }
 
+    /// @notice Get ALL reports from ALL doctors
+    function getAllReports() public view returns (string[] memory) {
+        // First count how many total reports exist
+        uint total = 0;
+        for (uint i = 0; i < DrIDs.length; i++) {
+            total += Doctors[DrIDs[i]].reports.length;
+        }
+
+        // Create a big array to store all
+        string[] memory allReports = new string[](total);
+
+        uint index = 0;
+
+        // Push all reports into the array
+        for (uint i = 0; i < DrIDs.length; i++) {
+            string[] memory r = Doctors[DrIDs[i]].reports;
+
+            for (uint j = 0; j < r.length; j++) {
+                allReports[index] = r[j];
+                index++;
+            }
+        }
+
+        return allReports;
+    }
+
+
     // -----------------------
     //       VIEW
     // -----------------------
 
     function getAllDrs() public view returns (address[] memory) {
         return DrIDs;
+    }
+
+    /// @notice Get total number of all reports from ALL doctors
+    function getTotalReports() public view returns (uint) {
+        uint total = 0;
+        for (uint i = 0; i < DrIDs.length; i++) {
+            total += Doctors[DrIDs[i]].reports.length;
+        }
+        return total;
+    }
+
+    function getTotalDoctors() public view returns (uint) {
+       return DrIDs.length;
     }
 
     function getDr(address _id) public view returns (string memory) {

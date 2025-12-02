@@ -23,10 +23,10 @@ interface AirQualityReport {
 
 @Component({
   selector: 'app-patient',
-  templateUrl: './patient.component.html',
-  styleUrls: ['./patient.component.sass']
+  templateUrl: './search-station.component.html',
+  styleUrls: ['./search-station.component.sass']
 })
-export class PatientComponent implements OnInit {
+export class SearchStationComponent implements OnInit {
   searchStationId: string = '';
   stationInfo: any = null;
   reports: AirQualityReport[] = [];
