@@ -1,8 +1,8 @@
 <div class="container-fluid">
   <div class="container">
     <div class="row mt-2">
-      <div class="col-md-3" *ngFor="let card of Titles; index as i">
-        <app-card [background]="Background[i]" [title]="Titles[i]" [image]="Images[i]" [count]="Count"></app-card>
+      <div class="col-md-6" *ngFor="let card of Titles; index as i">
+        <app-card [background]="Background[i]" [title]="Titles[i]" [image]="Images[i]" [count]="Count[i]"></app-card>
       </div>
     </div>
     <div class="row mt-3">

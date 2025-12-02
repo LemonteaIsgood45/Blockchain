@@ -7,7 +7,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
       <a
         class="navbar-brand col-md-2 col-lg-2 px-3 text-white fs-bold"
         href="#"
-        >EHR Hospital</a
+        >AIR QUALITY REPORTS ADMIN</a
       >
       <button
         class="navbar-toggler d-md-none"

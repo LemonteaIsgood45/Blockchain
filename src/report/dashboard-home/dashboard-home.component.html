@@ -1,0 +1,235 @@
+<div class="container-fluid">
+  <div class="container">
+    <div class="head">Report Dashboard</div>
+    <hr>
+    <div class="content" >
+      <div class="card mt-2">
+        <button class="btn py-1 px-2"><i class="fas fa-edit"></i> Edit</button>
+        <div class="doctor w-100 p-2 d-flex flex-row align-items-center">
+          <div class="doc-image">
+            <img class="border border-1 border-secondary rounded-circle p-1"
+              [src]='DoctorDetails.imageHash || "../../../assets/images/portrait.png"' alt="Doctor Image" width="150px"
+              height="150px">
+          </div>
+          <div class="doc-info d-flex flex-column">
+            <div class="col">
+              <div class="row py-2">
+                <div class="col-md-12">
+                  <b>DocID: </b> <span class="docID"> <b>{{DoctorDetails.docID}}</b></span>
+                </div>
+              </div>
+              <div class="row-md-12 d-flex flex-row justify-content-between">
+                <div class="col-md-12 d-flex flex-column">
+                  <div>
+                    <b>Full Name : </b> <span class="fName">{{DoctorDetails.fName}} {{DoctorDetails.lName}}</span></div>
+                  <div>
+                    <b>Date of Joining : </b> <span class="Doj">{{DoctorDetails.Doj}}</span>
+                  </div>
+                  <div>
+                    <b>Speciality: </b><span class="speciality">{{DoctorDetails.speciality}}</span>
+                  </div>
+
+                </div>
+                <div class="col-md-12 d-flex flex-column">
+                  <div>
+                    <b>Email : </b><span class="emailID">{{DoctorDetails.emailID}}</span></div>
+                  <div>
+                    <b>Phone: </b><span class="phone">{{DoctorDetails.phone}}</span>
+                  </div>
+                  <div>
+                    <b>City </b><span class="city">{{DoctorDetails.city}}</span>
+                  </div>
+                  <div>
+                    <b>State: </b><span class="state">{{DoctorDetails.state}}</span>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add New Air Quality Report Card -->
+      <div class="card mt-4 add-report-card">
+        <div class="card-header-custom">
+          <h5><i class="fas fa-plus-circle"></i> Add New Air Quality Report</h5>
+        </div>
+        <form (ngSubmit)="submitReport()" #reportForm="ngForm">
+          <div class="report-form p-3">
+            
+            <!-- Basic Information -->
+            <div class="form-section">
+              <h6 class="section-title">Basic Information</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="reportId" class="form-label">Report ID</label>
+                  <input type="text" class="form-control" id="reportId" 
+                         [(ngModel)]="newReport.reportId" name="reportId" required
+                         placeholder="e.g., AQR-2024-001">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="location" class="form-label">Location</label>
+                  <input type="text" class="form-control" id="location" 
+                         [(ngModel)]="newReport.location" name="location" required
+                         placeholder="e.g., Downtown Monitoring Station">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="timestamp" class="form-label">Date & Time</label>
+                  <input type="datetime-local" class="form-control" id="timestamp" 
+                         [(ngModel)]="newReport.timestamp" name="timestamp" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="status" class="form-label">Air Quality Status</label>
+                  <select class="form-control" id="status" 
+                          [(ngModel)]="newReport.status" name="status" required>
+                    <option value="">Select Status</option>
+                    <option value="Good">Good</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Unhealthy">Unhealthy</option>
+                    <option value="Hazardous">Hazardous</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Air Quality Index -->
+            <div class="form-section">
+              <h6 class="section-title">Air Quality Index (AQI)</h6>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="aqi" class="form-label">AQI Value (0-500)</label>
+                  <input type="number" class="form-control" id="aqi" 
+                         [(ngModel)]="newReport.aqi" name="aqi" required
+                         min="0" max="500" placeholder="e.g., 85">
+                  <small class="form-text text-muted">
+                    0-50: Good | 51-100: Moderate | 101-150: Unhealthy for Sensitive | 151+: Unhealthy
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Particulate Matter -->
+            <div class="form-section">
+              <h6 class="section-title">Particulate Matter</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="pm25" class="form-label">PM2.5 (µg/m³)</label>
+                  <input type="number" class="form-control" id="pm25" 
+                         [(ngModel)]="newReport.pm25" name="pm25" required
+                         step="0.1" min="0" placeholder="e.g., 35.5">
+                  <small class="form-text text-muted">Fine particles ≤2.5 micrometers</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="pm10" class="form-label">PM10 (µg/m³)</label>
+                  <input type="number" class="form-control" id="pm10" 
+                         [(ngModel)]="newReport.pm10" name="pm10" required
+                         step="0.1" min="0" placeholder="e.g., 50.2">
+                  <small class="form-text text-muted">Particles ≤10 micrometers</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Gaseous Pollutants -->
+            <div class="form-section">
+              <h6 class="section-title">Gaseous Pollutants</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="co2" class="form-label">CO₂ (ppm)</label>
+                  <input type="number" class="form-control" id="co2" 
+                         [(ngModel)]="newReport.co2" name="co2" required
+                         step="0.1" min="0" placeholder="e.g., 410.5">
+                  <small class="form-text text-muted">Carbon Dioxide</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="no2" class="form-label">NO₂ (ppb)</label>
+                  <input type="number" class="form-control" id="no2" 
+                         [(ngModel)]="newReport.no2" name="no2" required
+                         step="0.1" min="0" placeholder="e.g., 25.3">
+                  <small class="form-text text-muted">Nitrogen Dioxide</small>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="so2" class="form-label">SO₂ (ppb)</label>
+                  <input type="number" class="form-control" id="so2" 
+                         [(ngModel)]="newReport.so2" name="so2" required
+                         step="0.1" min="0" placeholder="e.g., 15.7">
+                  <small class="form-text text-muted">Sulfur Dioxide</small>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="o3" class="form-label">O₃ (ppb)</label>
+                  <input type="number" class="form-control" id="o3" 
+                         [(ngModel)]="newReport.o3" name="o3" required
+                         step="0.1" min="0" placeholder="e.g., 45.8">
+                  <small class="form-text text-muted">Ozone</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- Environmental Conditions -->
+            <div class="form-section">
+              <h6 class="section-title">Environmental Conditions</h6>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="temperature" class="form-label">Temperature (°C)</label>
+                  <input type="number" class="form-control" id="temperature" 
+                         [(ngModel)]="newReport.temperature" name="temperature" required
+                         step="0.1" placeholder="e.g., 28.5">
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="humidity" class="form-label">Humidity (%)</label>
+                  <input type="number" class="form-control" id="humidity" 
+                         [(ngModel)]="newReport.humidity" name="humidity" required
+                         min="0" max="100" step="0.1" placeholder="e.g., 65.2">
+                </div>
+              </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="form-section">
+              <h6 class="section-title">Additional Information</h6>
+              <div class="row">
+                <div class="col-md-12 mb-3">
+                  <label for="notes" class="form-label">Notes (Optional)</label>
+                  <textarea class="form-control" id="notes" 
+                            [(ngModel)]="newReport.notes" name="notes" rows="3"
+                            placeholder="Add any additional observations or notes about this reading..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-submit" 
+                      [disabled]="!reportForm.valid || isSubmitting">
+                <i class="fas fa-save"></i> 
+                <span *ngIf="!isSubmitting">Submit Report</span>
+                <span *ngIf="isSubmitting">
+                  <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                  Submitting...
+                </span>
+              </button>
+              <button type="button" class="btn btn-secondary" 
+                      (click)="resetForm(reportForm)" [disabled]="isSubmitting">
+                <i class="fas fa-redo"></i> Reset
+              </button>
+            </div>
+
+            <!-- Success/Error Messages -->
+            <div *ngIf="submitSuccess" class="alert alert-success mt-3" role="alert">
+              <i class="fas fa-check-circle"></i> Report submitted successfully!
+            </div>
+            <div *ngIf="submitError" class="alert alert-danger mt-3" role="alert">
+              <i class="fas fa-exclamation-circle"></i> {{ submitError }}
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

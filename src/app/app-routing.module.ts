@@ -10,11 +10,12 @@ const routes: Routes = [
       import('../admin/admin.module').then((m) => m.AdminModule)
   },
   {
-    path: 'doctor',
+    path: 'report',
     loadChildren: () =>
-      import('../doctor/doctor.module').then((m) => m.DoctorModule),
+      import("../report/report.module").then((m) => m.ReportModule),
   },
-  {path: '**', component: HomeComponent, redirectTo: '', pathMatch: "full"},
+  // {path: '**', component: HomeComponent, redirectTo: '', pathMatch: "full"},
+  {path: '**', redirectTo: ''},
 ];
 
 @NgModule({

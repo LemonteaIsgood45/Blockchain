@@ -4,10 +4,10 @@
       <div class="row form-row">
         <div class="col-12">
           <div class="usr-image d-flex justify-content-center flex-column align-items-center mt-3 mb-5 object-fit">
-            <img class="image rounded-circle" [src]=" image_url || '../../../assets/images/doctor.png'" alt="user"
+            <img class="image rounded-circle" [src]=" image_url || '../../../assets/images/portrait.png'" alt="user"
               width="150px">
             <div class="img-c mb-3 mt-3 col-md-6 d-flex flex-column">
-              <label class="form-label text-center" for="formFile">Select Doctor image</label>
+              <label class="form-label text-center" for="formFile">Select Station head image</label>
               <input class="img-chooser form-control" type="file" id="formFile" (change)="PreviewImage($event)">
             </div>
           </div>
@@ -56,9 +56,9 @@
 
         <div class="col-12">
           <div class="form-group">
-            <label>Doctor Id<sup class="fas fa-asterisk fw-normal text-danger" style="font-size: 8px;"></sup></label>
+            <label>Station Id<sup class="fas fa-asterisk fw-normal text-danger" style="font-size: 8px;"></sup></label>
             <input [(ngModel)]="model.docID" name="docID" id="accid" type="text" class="form-control"
-              placeholder="doctor account id" required />
+              placeholder="Station account id" required />
           </div>
         </div>
         <div class="col-12 col-sm-6">
@@ -84,7 +84,7 @@
         </div>
       </div>
       <button type="submit" id="btn" class="btn btn-primary">
-        Add Doctor</button>
+        Add Station</button>
     </form>
   </div>
   <app-progress_card [success]="success" [show]="show" [msg_text]="msg_text" [warn]="warn" (retry)="onAddDocSubmit()" (close)="onClose()">

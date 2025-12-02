@@ -99,6 +99,25 @@ export class DoctorService {
       })
     })
   }
+  
+  getDoctorReports(docID: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.bs.getContract().then((contract: any) => {
+        contract.methods
+          .getReports(docID)
+          .call()
+          .then((reports: any) => {
+            console.log("Doctor Reports:", reports);
+            resolve(reports);
+          })
+          .catch((err: any) => {
+            console.log(err);
+            reject(err);
+          });
+      });
+    });
+  }
+
   async addRecord(data: any) {
     let IPFSHash = await (await (this.ipfs.add(Buffer.from(JSON.stringify(data))))).path
     return IPFSHash

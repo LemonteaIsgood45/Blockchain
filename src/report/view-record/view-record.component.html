@@ -1,0 +1,117 @@
+<div class="view-record-container">
+  <div class="header">
+    <h1>Air Quality Reports</h1>
+    <button class="refresh-btn" (click)="refreshReports()" [disabled]="loading">
+      <span *ngIf="!loading">🔄 Refresh</span>
+      <span *ngIf="loading">Loading...</span>
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading">
+    <div class="spinner"></div>
+    <p>Loading air quality reports...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-message">
+    <p>⚠️ {{ error }}</p>
+    <button (click)="refreshReports()">Try Again</button>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && !error && reports.length === 0" class="empty-state">
+    <div class="empty-icon">📊</div>
+    <h2>No Reports Found</h2>
+    <p>There are no air quality reports recorded yet for this station.</p>
+  </div>
+
+  <!-- Reports Grid -->
+  <div *ngIf="!loading && !error && reports.length > 0" class="reports-grid">
+    <div class="report-card" *ngFor="let report of reports">
+      <!-- Card Header -->
+      <div class="card-header">
+        <div class="header-info">
+          <h3>{{ report.location }}</h3>
+          <p class="timestamp">{{ formatDate(report.timestamp) }}</p>
+        </div>
+        <div class="aqi-badge" [style.background-color]="getAQIColor(report.aqi)">
+          <span class="aqi-label">AQI</span>
+          <span class="aqi-value">{{ report.aqi }}</span>
+        </div>
+      </div>
+
+      <!-- Status Badge -->
+      <div class="status-badge" [style.background-color]="getStatusColor(report.status)">
+        {{ report.status }}
+      </div>
+
+      <!-- Main Pollutants -->
+      <div class="pollutants-section">
+        <h4>Particulate Matter</h4>
+        <div class="pollutant-grid">
+          <div class="pollutant-item">
+            <span class="pollutant-label">PM2.5</span>
+            <span class="pollutant-value">{{ report.pm25 }} <small>µg/m³</small></span>
+          </div>
+          <div class="pollutant-item">
+            <span class="pollutant-label">PM10</span>
+            <span class="pollutant-value">{{ report.pm10 }} <small>µg/m³</small></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gas Pollutants -->
+      <div class="pollutants-section">
+        <h4>Gaseous Pollutants</h4>
+        <div class="pollutant-grid">
+          <div class="pollutant-item">
+            <span class="pollutant-label">CO₂</span>
+            <span class="pollutant-value">{{ report.co2 }} <small>ppm</small></span>
+          </div>
+          <div class="pollutant-item">
+            <span class="pollutant-label">NO₂</span>
+            <span class="pollutant-value">{{ report.no2 }} <small>ppb</small></span>
+          </div>
+          <div class="pollutant-item">
+            <span class="pollutant-label">SO₂</span>
+            <span class="pollutant-value">{{ report.so2 }} <small>ppb</small></span>
+          </div>
+          <div class="pollutant-item">
+            <span class="pollutant-label">O₃</span>
+            <span class="pollutant-value">{{ report.o3 }} <small>ppb</small></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Environmental Conditions -->
+      <div class="pollutants-section">
+        <h4>Environmental Conditions</h4>
+        <div class="pollutant-grid">
+          <div class="pollutant-item">
+            <span class="pollutant-label">🌡️ Temperature</span>
+            <span class="pollutant-value">{{ report.temperature }}°C</span>
+          </div>
+          <div class="pollutant-item">
+            <span class="pollutant-label">💧 Humidity</span>
+            <span class="pollutant-value">{{ report.humidity }}%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notes -->
+      <div *ngIf="report.notes" class="notes-section">
+        <h4>Notes</h4>
+        <p>{{ report.notes }}</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="card-footer">
+        <small class="report-id">Report ID: {{ report.reportId }}</small>
+        <small class="ipfs-hash" *ngIf="report.ipfsHash" title="{{ report.ipfsHash }}">
+          📎 IPFS: {{ report.ipfsHash.substring(0, 15) }}...
+        </small>
+      </div>
+    </div>
+  </div>
+</div>

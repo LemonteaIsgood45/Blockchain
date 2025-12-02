@@ -11,11 +11,11 @@ import { DoctorService } from 'src/admin/services/doctor.service';
 export class AddComponent implements OnInit {
   model: any = {
     docID: '',
-    fName: 'test_name',
-    lName: 'test_name',
+    fName: 'first_name',
+    lName: 'last_name',
     Doj: '',
-    emailID: 'test_name@mail.com',
-    phone: '123456789',
+    emailID: 'your_gmail@mail.com',
+    phone: 'your_phone_number',
     city: 'city',
     state: 'state',
     specialty: 'specialty',
@@ -46,7 +46,7 @@ export class AddComponent implements OnInit {
 
   onAddDocSubmit() {
     this.show = true;
-    this.msg_text = 'Adding Doctor to the Network....';
+    this.msg_text = 'Adding Station to the Network....';
     this.warn = false;
     this.success = false
 
@@ -65,7 +65,7 @@ export class AddComponent implements OnInit {
     }).catch((er: any) => {
       this.warn = true
       this.msg_text =
-        'Adding Doctor Failed<br> <small class="fw-light text-danger"><b>"</b>' +
+        'Adding Station Failed<br> <small class="fw-light text-danger"><b>"</b>' +
         this.model.docID +
         '<b>"</b></small><br>1.not a valid address or <br>2.Already have a role';
       console.log(er);

@@ -39,19 +39,27 @@ export class DoctorService {
     this.contract = this.blockchainService.contract;
     console.log(this.contract);
 
-    this.account = this.blockchainService.account;
-    console.log(this.account);
+    // If account is a signal, call it to get the value
+    const accountAddress = typeof this.blockchainService.account === 'function' 
+      ? this.blockchainService.account() 
+      : this.blockchainService.account;
+    
+    this.account = accountAddress;
+    console.log('Account Address:', this.account);
 
     this.contract.methods
       .getAllDrs()
       .call()
       .then((result: any) => {
-        console.log(result);
+        console.log('All Station:', result);
         this.Doctors = result;
-        if (this.Doctors.length >= 0) {
-          for (var i = 0; i <= this.Doctors.length; i++) {
-            if (this.Doctors[i] == this.account) {
+        
+        if (this.Doctors.length > 0) {
+          for (var i = 0; i < this.Doctors.length; i++) {
+            if (this.Doctors[i].toLowerCase() === this.account.toLowerCase()) {
               this.isDoctor = true;
+              console.log('✓ Station verified!');
+              break;
             }
           }
         }
@@ -59,26 +67,82 @@ export class DoctorService {
       })
       .catch((err: any) => {
         console.log(err);
+        this.checkComplete = true;
       });
   }
 
   async getDoctor(): Promise<any> {
     this.contract = this.blockchainService.contract;
+
+    return new Promise((resolve, reject) => {
+      this.contract.methods.getDr(this.account).call().then(async (result: any) => {
+        try {
+          let data = "";
+          for await (const chunk of this.ipfs.cat(result)) {
+            data += new TextDecoder().decode(chunk);
+          }
+          this.DoctorDetails = JSON.parse(data);
+          resolve(this.DoctorDetails);
+        } catch (err) {
+          console.log(err);
+          reject(err);
+        }
+      });
+    });
+  }
+
+  async getDoctorReports(drId: string): Promise<any> {
+    this.contract = this.blockchainService.contract;
+
+    console.log("Fetching reports for Doctor ID:", drId);
+
     return new Promise((resolve, reject) => {
       this.contract.methods
-        .getDr(this.account)
+        .getReports(drId)
         .call()
-        .then(async (result: any) => {
-          console.log(result);
-          await this.ipfs.cat(result).then((data: any) => {
-            this.DoctorDetails = data;
-            resolve(this.DoctorDetails);
-            JSON.parse(this.DoctorDetails);
-            return this.DoctorDetails;
-          });
+        .then((result: any) => {
+          console.log("Reports:", result);
+          resolve(result);
+        })
+        .catch((err: any) => {
+          console.log(err);
+          reject(err);
         });
     });
   }
+
+  async addReport(reportData: any): Promise<any> {
+    this.contract = this.blockchainService.contract;
+
+    return new Promise(async (resolve, reject) => {
+      try {
+        const ipfsHash = await this.ipfs.add(JSON.stringify(reportData));
+        const hash = ipfsHash.path;
+
+        const contract = await this.blockchainService.getContract();
+
+        const account = await this.blockchainService.getCurrentAccount();
+
+        contract.methods
+          .addReport(hash)
+          .send({ from: account })
+          .on("confirmation", (result: any) => {
+            console.log("Report added:", result);
+            resolve(result);
+          })
+          .on("error", (err: any) => {
+            console.error(err);
+            reject(err);
+          });
+
+      } catch (error) {
+        console.error(error);
+        reject(error);
+      }
+    });
+  }
+
+
 
   async checkIsPatient(id: string): Promise<any> {
     this.patientId = id;

@@ -1,58 +1,74 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >=0.4.21;
+pragma solidity >=0.8.0;
 
 import "./Roles.sol";
 
 contract Contract {
-  using Roles for Roles.Role;
+    using Roles for Roles.Role;
 
-  Roles.Role private admin;
-  Roles.Role private doctor;
+    Roles.Role private admin;
+    Roles.Role private doctor;
 
-  struct Doctor {
-    address id;
-    string drHash;
-  }
+    struct Doctor {
+        address id;
+        string drHash;
+        string[] reports; // <--- ADD REPORT LIST
+    }
 
-  mapping(address => Doctor) Doctors;
+    mapping(address => Doctor) private Doctors;
+    address[] public DrIDs;
 
-  address[] public DrIDs;
+    constructor() {
+        admin.add(msg.sender);
+    }
 
-  constructor() {
-    admin.add(msg.sender);
-  }
+    // -----------------------
+    //       ADMIN
+    // -----------------------
 
-  //get Admin
+    function isAdmin() public view returns (bool) {
+        return admin.has(msg.sender);
+    }
 
-  function isAdmin() public view returns (bool) {
-    return admin.has(msg.sender);
-  }
+    function addDrInfo(address dr_id, string memory _drInfo_hash) public {
+        require(admin.has(msg.sender), "Only Admin");
 
-  //Add Doctor
+        Doctor storage drInfo = Doctors[dr_id];
+        drInfo.id = dr_id;
+        drInfo.drHash = _drInfo_hash;
 
-  function addDrInfo(address dr_id, string memory _drInfo_hash) public {
-    require(admin.has(msg.sender), "Only For Admin");
+        DrIDs.push(dr_id);
+        doctor.add(dr_id);
+    }
 
-    Doctor storage drInfo = Doctors[dr_id];
-    drInfo.id = dr_id;
-    drInfo.drHash = _drInfo_hash;
-    DrIDs.push(dr_id);
+    // -----------------------
+    //       DOCTOR
+    // -----------------------
 
-    doctor.add(dr_id);
-  }
+    /// @notice Add a report (ONLY doctor can add THEIR OWN)
+    function addReport(string memory reportHash) public {
+        require(doctor.has(msg.sender), "Only Doctor");
+        Doctors[msg.sender].reports.push(reportHash);
+    }
 
-  function getAllDrs() public view returns (address[] memory) {
-    return DrIDs;
-  }
+    /// @notice Get all reports of a doctor
+    function getReports(address dr_id) public view returns (string[] memory) {
+        return Doctors[dr_id].reports;
+    }
 
-  function getDr(address _id) public view returns (string memory) {
-    return (Doctors[_id].drHash);
-  }
+    // -----------------------
+    //       VIEW
+    // -----------------------
 
-  // check is Doctor
+    function getAllDrs() public view returns (address[] memory) {
+        return DrIDs;
+    }
 
-  function isDr(address id) public view returns (bool) {
-    return doctor.has(id);
-  }
+    function getDr(address _id) public view returns (string memory) {
+        return Doctors[_id].drHash;
+    }
 
+    function isDr(address id) public view returns (bool) {
+        return doctor.has(id);
+    }
 }

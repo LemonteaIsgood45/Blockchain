@@ -12,7 +12,7 @@
             <img
               class="border border-1 border-secondary rounded-circle p-1"
               [src]="
-                Docdetails.imageHash || '../../../assets/images/doctor.png'
+                Docdetails.imageHash || '../../../assets/images/portrait.png'
               "
               alt="Doctor Image"
               width="150px"
@@ -81,9 +81,9 @@
       class="nill d-flex flex-column justify-content-center align-items-center text-center"
       *ngIf="loadComplete && !loaded"
     >
-      No Doctors In the Network Add Doctors using the above tab<span
+      No Air moniter station In the Network Add air moniter station using the above tab<span
       class="text-primary fw-bold"
-    >Add Doctor</span
+    >Add station</span
     >
       <button class="btn btn-primary" (click)="GetDoctors()">Retry</button>
     </div>

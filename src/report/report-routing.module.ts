@@ -10,20 +10,17 @@ const routes: Routes = [
     path: '',
     component: DoctorDashboardComponent,
     children: [
-      { path: 'doctor-dashboard', component: DashboardHomeComponent },
+      { path: '', redirectTo: 'report-dashboard', pathMatch: 'full' },
+      { path: 'report-dashboard', component: DashboardHomeComponent },
       { path: 'consult', component: ConsultationComponent },
-      {path:'view-record',component:ViewRecordComponent}
+      { path: 'view-record', component: ViewRecordComponent },
     ],
   },
-  {
-    path: '',
-    component: DoctorDashboardComponent,
-    redirectTo: 'doctor/consult',
-  },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class DoctorRoutingModule {}
+export class ReportRoutingModule {}

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DoctorRoutingModule } from './doctor-routing.module';
+import { ReportRoutingModule } from './report-routing.module';
 import { DoctorDashboardComponent } from './doctor-dashboard/doctor-dashboard.component';
 import { SidebarComponent } from './doctor-dashboard/sidebar/sidebar.component';
 import { HeaderComponent } from './doctor-dashboard/header/header.component';
@@ -25,6 +25,6 @@ import { RecordComponent } from './view-record/record/record.component';
     RecordComponent,
     
   ],
-  imports: [CommonModule,FormsModule, DoctorRoutingModule, UtilsModule],
+  imports: [CommonModule,FormsModule, ReportRoutingModule, UtilsModule],
 })
-export class DoctorModule {}
+export class ReportModule {}

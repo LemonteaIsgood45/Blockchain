@@ -1,0 +1,229 @@
+.container
+  .head
+    margin-top: 10px
+    font-size: 20px
+    font-family: 'Poppins',sans-serif
+    font-weight: 500
+  .card
+    border-radius: 15px
+    padding: 10px
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px
+    button
+      width: fit-content
+      height: fit-content
+      float: right
+      right: 0
+      margin-right: 15px
+      position: absolute
+      font-size: 12px
+      background: #5ebfff
+    .doctor
+      width: 100%
+      font-family: 'Poppins',sans-serif
+      font-size: 14px
+
+      .doc-image
+        width: 20%
+      .doc-info
+        width: 80%
+        font-weight: 300
+        color: #5e5e5e
+        align-content: start
+        align-items: self-start
+        span
+          font-size: 13px
+          color: #339258
+
+// Add Report Card Styles
+.add-report-card
+  margin-top: 2rem
+  border: 2px solid #e0e0e0
+  transition: all 0.3s ease
+
+  button
+    position: relative !important
+    float: none !important
+    right: auto !important
+    margin-right: 0 !important
+
+  &:hover
+    box-shadow: rgba(0, 0, 0, 0.45) 0px 8px 20px
+
+  .card-header-custom
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+    color: white
+    padding: 1rem 1.5rem
+    border-radius: 13px 13px 0 0
+    margin: -10px -10px 0 -10px
+
+    h5
+      margin: 0
+      font-family: 'Poppins', sans-serif
+      font-weight: 500
+      font-size: 1.2rem
+
+      i
+        margin-right: 0.5rem
+
+  .report-form
+    font-family: 'Poppins', sans-serif
+
+    .form-section
+      margin-bottom: 2rem
+      padding: 1.5rem
+      background: #f8f9fa
+      border-radius: 10px
+      border-left: 4px solid #667eea
+
+      .section-title
+        color: #667eea
+        font-weight: 600
+        margin-bottom: 1rem
+        font-size: 1rem
+        text-transform: uppercase
+        letter-spacing: 0.5px
+
+      .form-label
+        font-weight: 500
+        color: #495057
+        font-size: 0.9rem
+        margin-bottom: 0.5rem
+
+      .form-control
+        border-radius: 8px
+        border: 1px solid #ced4da
+        padding: 0.6rem 0.75rem
+        font-size: 0.9rem
+        transition: all 0.3s ease
+
+        &:focus
+          border-color: #667eea
+          box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25)
+
+        &::placeholder
+          color: #adb5bd
+          font-style: italic
+
+      select.form-control
+        cursor: pointer
+
+      textarea.form-control
+        resize: vertical
+        min-height: 80px
+
+      .form-text
+        font-size: 0.75rem
+        color: #6c757d
+        margin-top: 0.25rem
+
+    .form-actions
+      display: flex
+      gap: 1rem
+      justify-content: flex-start
+      margin-top: 2rem
+      padding: 1rem
+      background: #f8f9fa
+      border-radius: 10px
+
+      .btn
+        min-width: 150px
+        padding: 0.75rem 2rem
+        font-weight: 500
+        border-radius: 8px
+        font-size: 0.95rem
+        transition: all 0.3s ease
+        border: none
+
+      .btn-primary
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%)
+        color: white
+
+        &:hover:not(:disabled)
+          transform: translateY(-2px)
+          box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4)
+
+        &:disabled
+          background: #6c757d
+          cursor: not-allowed
+
+      .btn-secondary
+        background: #6c757d
+        color: white
+
+        &:hover:not(:disabled)
+          background: #5a6268
+          transform: translateY(-2px)
+
+    .alert
+      border-radius: 8px
+      padding: 1rem
+      font-size: 0.9rem
+      display: flex
+      align-items: center
+
+      i
+        margin-right: 0.5rem
+        font-size: 1.2rem
+
+    .alert-success
+      background: #d4edda
+      border-color: #c3e6cb
+      color: #155724
+
+    .alert-danger
+      background: #f8d7da
+      border-color: #f5c6cb
+      color: #721c24
+
+    .spinner-border-sm
+      width: 1rem
+      height: 1rem
+      border-width: 0.15em
+
+// Responsive adjustments
+@media (max-width: 768px)
+  .add-report-card
+    .report-form
+      .form-section
+        padding: 1rem
+
+      .form-actions
+        flex-direction: column
+
+        .btn
+          width: 100%
+
+  .container
+    .card
+      .doctor
+        flex-direction: column
+
+        .doc-image
+          width: 100%
+          text-align: center
+          margin-bottom: 1rem
+
+        .doc-info
+          width: 100%
+
+// Input number spinner styles
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button
+  opacity: 1
+
+// Focus styles for better accessibility
+.form-control:focus,
+.btn:focus
+  outline: none
+
+// Smooth animations
+.alert
+  animation: slideIn 0.3s ease-out
+
+@keyframes slideIn
+  from
+    opacity: 0
+    transform: translateY(-10px)
+  to
+    opacity: 1
+    transform: translateY(0)

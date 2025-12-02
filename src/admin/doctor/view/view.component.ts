@@ -40,7 +40,7 @@ export class ViewComponent implements OnInit {
 
 
   constructor(private doctorService: DoctorService) {
-    this.progressMsg = 'Loading Doctor Accounts From Blockchain'
+    this.progressMsg = 'Loading Station Accounts From Blockchain'
 
     this.DoctorDetails = doctorService.DoctorDetails
   }
