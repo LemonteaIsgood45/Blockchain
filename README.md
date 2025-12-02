@@ -21,7 +21,7 @@ credit : `https://github.com/shamil-t`
 
   - run the .exe file
 
-    4.Add Metamask Extension in Browser
+4. Add Metamask Extension in Browser
 
 - [Metamask Chrome](https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn?hl=en-US)
 
@@ -31,7 +31,7 @@ credit : `https://github.com/shamil-t`
 npm install --force
 ```
 
-5.open cmd/terminal as Administrator and type
+- open cmd/terminal as Administrator and type
 
 ```
 npm install -g truffle
