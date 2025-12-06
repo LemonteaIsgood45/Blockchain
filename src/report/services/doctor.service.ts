@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import { rejects } from 'assert';
-import { resolve } from 'dns';
-import { Observable } from 'rxjs';
+import { IPFS } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { BlockchainService } from 'src/services/blockchain.service';
 import { IpfsService } from 'src/services/ipfs.service';
 
@@ -26,7 +25,8 @@ export class DoctorService {
 
   constructor(
     private blockchainService: BlockchainService,
-    private ipfsService: IpfsService
+    private ipfsService: IpfsService,
+    private http: HttpClient
   ) {
     this.web3 = blockchainService.getWeb3();
     this.contract = blockchainService.getContract();
@@ -89,6 +89,41 @@ export class DoctorService {
         }
       });
     });
+  }
+
+  getDoctorDetails(docID: any): Promise<any> {
+    console.log(docID);
+
+    return new Promise((resolve) => {
+      this.blockchainService.getContract().then((contract: any) => {
+        contract.methods
+          .getDr(docID)
+          .call()
+          .then((ipfsHash: string) => {
+            console.log(ipfsHash);
+            this.http.get(IPFS.localIPFSGet + ipfsHash)
+              .subscribe((data: any) => {
+                console.log(data);
+                resolve(data);
+              });
+          });
+      })
+    })
+  }
+
+  getDrs(): Promise<any> {
+    return new Promise((resolve) => {
+      this.blockchainService.getContract().then((contract: any) => {
+        this.Doctors = contract.methods.getAllDrs()
+          .call()
+          .then((docs: any) => {
+            this.Doctors = docs;
+            console.log(this.Doctors);
+            resolve(this.Doctors)
+          });
+      })
+
+    })
   }
 
   async getDoctorReports(drId: string): Promise<any> {
