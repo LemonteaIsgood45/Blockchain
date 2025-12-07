@@ -150,4 +150,37 @@ export class BlockchainService {
       }, 1000);
     });
   }
+
+  async getAccounts(): Promise<string[]> {
+    return new Promise((resolve, reject) => {
+      if (this.web3) {
+        this.web3.eth.getAccounts().then((acc: string[]) => {
+          resolve(acc);
+        });
+      } else {
+        reject(null);
+      }
+    });
+  }
+
+  async approveReport(drId: string, reportIndex: number) {
+    try {
+      const contract = await this.getContract();
+      const accounts = await this.getAccounts();
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please connect your wallet.');
+      }
+
+      const result = await contract.methods
+        .approveReport(drId, reportIndex)
+        .send({ from: accounts[0] });
+
+      console.log('Report approved:', result);
+      return result;
+    } catch (error) {
+      console.error('Error approving report:', error);
+      throw error;
+    }
+  }
 }

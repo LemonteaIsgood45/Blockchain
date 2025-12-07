@@ -19,6 +19,8 @@ interface AirQualityReport {
   status: 'Good' | 'Moderate' | 'Unhealthy' | 'Hazardous';
   notes?: string;
   ipfsHash?: string;
+  approved: boolean;
+  reportIndex?: number;
 }
 
 @Component({
@@ -33,6 +35,8 @@ export class PatientComponent implements OnInit {
   isLoading: boolean = false;
   errorMessage: string = '';
   searchCompleted: boolean = false;
+  approvingReportIndex: number | null = null;
+  contractBalance: string | null = null;
 
   constructor(
     private doctorService: DoctorService,
@@ -40,8 +44,62 @@ export class PatientComponent implements OnInit {
     private blockchainService: BlockchainService
   ) {}
 
-  ngOnInit(): void {
-    // Component initialization
+  async ngOnInit(): Promise<void> {
+    await this.loadContractBalance();
+  }
+
+  async loadContractBalance() {
+    try {
+      const contract = await this.blockchainService.getContract();
+      const web3 = await this.blockchainService.getWeb3();
+      
+      const balanceWei = await web3.eth.getBalance(contract.options.address);
+      this.contractBalance = web3.utils.fromWei(balanceWei, 'ether');
+      
+      console.log('Contract balance loaded:', this.contractBalance, 'ETH');
+    } catch (error) {
+      console.error('Error loading contract balance:', error);
+      this.contractBalance = null;
+    }
+  }
+
+  async fundContract() {
+    try {
+      const contract = await this.blockchainService.getContract();
+      const accounts = await this.blockchainService.getAccounts();
+      const web3 = await this.blockchainService.getWeb3();
+
+      if (!accounts || accounts.length === 0) {
+        alert('Please connect your wallet.');
+        return;
+      }
+
+      const amount = prompt('How much ETH to send to contract?', '5');
+      if (!amount) return;
+
+      const confirmed = confirm(
+        `Send ${amount} ETH to contract?\n\n` +
+        `From: ${accounts[0]}\n` +
+        `To: ${contract.options.address}`
+      );
+
+      if (!confirmed) return;
+
+      await web3.eth.sendTransaction({
+        from: accounts[0],
+        to: contract.options.address,
+        value: web3.utils.toWei(amount, 'ether')
+      });
+
+      const balance = await web3.eth.getBalance(contract.options.address);
+      const balanceEth = web3.utils.fromWei(balance, 'ether');
+
+      alert(`Success! Contract now has ${balanceEth} ETH`);
+
+    } catch (error) {
+      console.error('Error funding contract:', error);
+      alert('Failed to fund contract. Check console for details.');
+    }
   }
 
   async searchReports() {
@@ -78,26 +136,28 @@ export class PatientComponent implements OnInit {
       // Get station information
       await this.getStationInfo(this.searchStationId);
 
-      // Get reports for this station
-      const reportHashes = await contract.methods
+      // Get reports for this station (now returns Report structs with approved field)
+      const reportStructs = await contract.methods
         .getReports(this.searchStationId)
         .call();
 
-      console.log('Report hashes:', reportHashes);
+      console.log('Report structs:', reportStructs);
 
-      if (reportHashes && reportHashes.length > 0) {
+      if (reportStructs && reportStructs.length > 0) {
         // Fetch each report from IPFS
-        const reportPromises = reportHashes.map(async (hash: string) => {
+        const reportPromises = reportStructs.map(async (reportStruct: any, index: number) => {
           try {
             let data = '';
             const ipfs = this.ipfsService.getIPFS();
             
-            for await (const chunk of ipfs.cat(hash)) {
+            for await (const chunk of ipfs.cat(reportStruct.hash)) {
               data += new TextDecoder().decode(chunk);
             }
             
             const report = JSON.parse(data);
-            report.ipfsHash = hash;
+            report.ipfsHash = reportStruct.hash;
+            report.approved = reportStruct.approved;
+            report.reportIndex = index; // Store the index for approval
             return report;
           } catch (err) {
             console.error('Error fetching report from IPFS:', err);
@@ -122,6 +182,76 @@ export class PatientComponent implements OnInit {
       this.errorMessage = 'Failed to load reports. Please try again.';
       this.isLoading = false;
       this.searchCompleted = true;
+    }
+  }
+
+  async approveReport(reportIndex: number) {
+    const report = this.reports[reportIndex];
+    if (!report || report.approved) {
+      return;
+    }
+
+    const confirmApproval = confirm(
+      `Are you sure you want to approve this report?\n\n` +
+      `Location: ${report.location}\n` +
+      `Timestamp: ${this.formatDate(report.timestamp)}\n` +
+      `AQI: ${report.aqi}\n\n` +
+      `This will send 1 ETH reward to the station.`
+    );
+
+    if (!confirmApproval) {
+      return;
+    }
+
+    this.approvingReportIndex = reportIndex;
+
+    try {
+      const contract = await this.blockchainService.getContract();
+      const accounts = await this.blockchainService.getAccounts();
+
+      if (!accounts || accounts.length === 0) {
+        throw new Error('No accounts found. Please connect your wallet.');
+      }
+
+      const actualReportIndex = report.reportIndex;
+
+      // Send the transaction
+      const result = await contract.methods
+        .approveReport(this.searchStationId, actualReportIndex)
+        .send({ from: accounts[0] });
+
+      console.log('Transaction result:', result);
+
+      // Update the local report status
+      this.reports[reportIndex].approved = true;
+
+      // Reload contract balance after approval
+      await this.loadContractBalance();
+
+      alert('Report approved successfully! 1 ETH reward has been sent to the station.');
+
+    } catch (error: any) {
+      console.error('Error approving report:', error);
+      
+      let errorMessage = 'Failed to approve report. ';
+      
+      if (error.message) {
+        if (error.message.includes('Already approved')) {
+          errorMessage += 'This report has already been approved.';
+        } else if (error.message.includes('Invalid report index')) {
+          errorMessage += `Invalid report index.`;
+        } else if (error.message.includes('Contract needs more ETH')) {
+          errorMessage += 'The contract does not have enough ETH to pay the reward.';
+        } else if (error.message.includes('Reward transfer failed')) {
+          errorMessage += 'Failed to send reward to the station.';
+        } else {
+          errorMessage += error.message || 'Please try again.';
+        }
+      }
+      
+      alert(errorMessage);
+    } finally {
+      this.approvingReportIndex = null;
     }
   }
 

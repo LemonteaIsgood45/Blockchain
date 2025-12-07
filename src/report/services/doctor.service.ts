@@ -22,6 +22,7 @@ export class DoctorService {
   patientId: string = '';
 
   ipfs: any;
+  
 
   constructor(
     private blockchainService: BlockchainService,
@@ -177,7 +178,9 @@ export class DoctorService {
     });
   }
 
-
+  async getBalance(): Promise<any> {
+    return this.blockchainService.balance();
+  }
 
   async checkIsPatient(id: string): Promise<any> {
     this.patientId = id;

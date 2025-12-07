@@ -57,6 +57,8 @@ export class DashboardHomeComponent implements OnInit {
     notes: ''
   };
 
+  balance: number = 0;
+
   isSubmitting: boolean = false;
   submitSuccess: boolean = false;
   submitError: string = '';
@@ -65,12 +67,13 @@ export class DashboardHomeComponent implements OnInit {
     this.DoctorDetails = [];
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     // Set current datetime as default
     this.setCurrentDateTime();
     
     setTimeout(() => {
       this.getDoctorDetails();
+      this.setBalance();
     }, 3000);
   }
 
@@ -79,6 +82,10 @@ export class DashboardHomeComponent implements OnInit {
       console.log(data);
       this.DoctorDetails = data;
     });
+  }
+
+  async setBalance() {
+    this.balance = await this.doctorService.getBalance();
   }
 
   setCurrentDateTime() {

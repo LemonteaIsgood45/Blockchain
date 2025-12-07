@@ -4,6 +4,18 @@
       <h1>🔍 Air Quality Reports Lookup</h1>
       <p class="subtitle">Search for air quality reports by Station ID</p>
     </div>
+    
+    <div *ngIf="searchCompleted" style="background: #fff3cd; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+      <button 
+        class="btn btn-approve" 
+        style="margin-top: 0.5rem; font-size: 0.85rem; padding: 0.4rem 1rem;"
+        (click)="fundContract()">
+        💰 Fund Contract with ETH
+      </button>
+      <div *ngIf="contractBalance !== null" class="contract-balance-info">
+        💰 Contract Balance: <strong>{{ contractBalance }} ETH</strong>
+      </div>
+    </div>
 
     <!-- Search Box -->
     <div class="search-section">
@@ -145,9 +157,25 @@
             </div>
           </div>
 
-          <!-- Status Badge -->
-          <div class="status-badge" [style.background-color]="getStatusColor(report.status)">
-            {{ report.status }}
+          <!-- Approval Status & Button -->
+          <div class="approval-section">
+            <div class="status-badge" [ngClass]="{'approved': report.approved, 'pending': !report.approved}">
+              <i class="fas" [ngClass]="report.approved ? 'fa-check-circle' : 'fa-clock'"></i>
+              {{ report.approved ? 'Approved' : 'Pending Approval' }}
+            </div>
+            <button 
+              *ngIf="!report.approved"
+              class="btn btn-approve"
+              (click)="approveReport(i)"
+              [disabled]="approvingReportIndex === i">
+              <span *ngIf="approvingReportIndex !== i">
+                <i class="fas fa-check"></i> Approve & Reward (1 ETH)
+              </span>
+              <span *ngIf="approvingReportIndex === i">
+                <span class="spinner-border spinner-border-sm me-2"></span>
+                Approving...
+              </span>
+            </button>
           </div>
 
           <!-- Main Pollutants -->
